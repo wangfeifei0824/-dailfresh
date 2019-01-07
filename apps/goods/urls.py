@@ -17,6 +17,6 @@ from django.conf.urls import url
 from .views import *
 
 urlpatterns = [
-    url(r'^index$' ,index, name='index'),
-    url(r'^$' ,index),
+    url(r'^IndexView$', IndexView.as_view(), name='index'),
+    url(r'^$', IndexView.as_view(), name='index'),
 ]

@@ -12,10 +12,11 @@ class AddressMangager(models.Manager):
         try:
             # default_address = Address.objects.get(user__exact=user, is_default=True)
             # 进行改写,self.model 获取类型替换
-            default_address = self.get(user__exact=user, is_default=True)
+            default_address = self.get(user=user, is_default=True)
         except self.model.DoesNotExist as e:
             # 未找到地址设置为空
             default_address = None
+        return default_address
 
 
 class User(AbstractUser, BaseModel):
@@ -35,7 +36,7 @@ class Address(BaseModel):
     phone = models.CharField('练习电话', max_length=11)
     is_default = models.BooleanField('是否默认', default=False)
     
-#     自定义的管理器实例化
+#     自定义的模型管理器实例化
     objects = AddressMangager()
     
     class Meta:

@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 自定义模块
-    'user',
-    'goods',
-    'cart',
-    'order',
+    'apps.user',
+    'apps.goods',
+    'apps.cart',
+    'apps.order',
 #     注册富文本编辑器应用
     'tinymce',
 #     全文搜索框
@@ -175,5 +175,8 @@ CACHES = {
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
+# 配置登录url地址
+LOGIN_URL = '/user/login'
 
-
+# 设置图片的上传路径
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
