@@ -15,11 +15,12 @@ Django web后端开发电商项目--dailfresh
 2.启动项目
     1.启动redis数据库服务
         redis-server
-    3.切换到项目的根目录下，执行
-        celery -A celery_tasks.tasks worker -l info
-        celery -A celery_tasks.tasks worker -l info -P enevtlet(win10)
-    4.在项目的根目录下，依次执行
+    2.在项目的根目录下，依次执行
         python manage.py migrate
         python manage.py runserver
+    3.在项目的根目录下，执行
+        celery -A celery_tasks.tasks worker -l info
+        celery -A celery_tasks.tasks worker -l info -P eventlet(win10)
+
     启动完成
 

@@ -17,8 +17,8 @@ from django.conf.urls import url
 from .views import *
 
 urlpatterns = [
-    url(r'^index$', IndexView.as_view(), name='index'),
-    url(r'^detail/(?P<goods_id>\d+)$', DetailView.as_view(), name='detail'),
-    # url(r'info', ),
-    url(r'^$', StaticIndexView.as_view(), name='index'),
+    url(r'^index$', IndexView.as_view(), name='index'), # 首页
+    url(r'^detail/(?P<goods_id>\d+)$', DetailView.as_view(), name='detail'),  #详情页
+    url(r'list', ListView.as_view(), name='list'), # 列表页
+    url(r'^$', StaticIndexView.as_view(), name='staticindex'),  # 静态首页
 ]

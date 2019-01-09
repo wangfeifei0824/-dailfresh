@@ -80,7 +80,7 @@
 		<ul class="subnav fl">
 
             {% for type in types %}
-			<li><a href="#model0{{ forloop.counter }}" class="{{ type.logo }}">{{ type.name }}</a></li>
+			<li><a href="{% url 'goods:list' %}?type_id={{ type.id }}&page=1&sort=default" class="{{ type.logo }}">{{ type.name }}</a></li>
             {% endfor %}
 
 		</ul>
@@ -93,6 +93,7 @@
 			<div class="prev"></div>
 			<div class="next"></div>
 			<ul class="points"></ul>
+            </ul>
 		</div>
 		<div class="adv fl">
 

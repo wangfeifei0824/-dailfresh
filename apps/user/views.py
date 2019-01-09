@@ -20,6 +20,7 @@ from utils.mixin import LoginRequiredMixin
 # /user/register
 class RegisterView(View):
     '''注册'''
+    
     def get(self, request):
         '''显示注册页面'''
         return render(request, 'register.html')
@@ -101,7 +102,6 @@ class LoginView(View):
             if user.is_active:
                 # 记录用户的登录状态，将用户信息存入session
                 login(request, user)
-                
                 # 获取登录成功后要跳转的地址，默认跳转到首页
                 next_url = request.GET.get('next', reverse('goods:index'))
                 response = redirect(next_url)
@@ -137,10 +137,9 @@ class UserInfoView(LoginRequiredMixin, View):
         # sr = StrictRedis(host='127.0.0.1', port=6379, db=9)
         conn = get_redis_connection('default')
         history_key = 'history_%d' % user.id
-        sku_ids = conn.lrange(history_key, 0, 5)
-        print(sku_ids)
+        sku_ids = conn.lrange(history_key, 0, 4)
         goods_list = []
-        for id in sku_ids: # 按照用户的浏览顺序查询列表
+        for id in sku_ids:  # 按照用户的浏览顺序查询列表
             try:
                 goods = GoodsSKU.objects.get(id=id.decode())
                 goods_list.append(goods)
@@ -149,7 +148,7 @@ class UserInfoView(LoginRequiredMixin, View):
         
         params = {
             'address': address,
-            'good_list': goods_list
+            'goods_list': goods_list
         }
         return render(request, 'user_center_info.html', params)
 
