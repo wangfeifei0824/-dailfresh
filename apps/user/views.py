@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
+from django_redis import get_redis_connection
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired
 from redis import StrictRedis
 
@@ -133,13 +134,15 @@ class UserInfoView(LoginRequiredMixin, View):
         user = request.user
         address = Address.objects.get_default_address(user)
         # 从redis获取用户的浏览记录
-        sr = StrictRedis(host='127.0.0.1', port=6379, db=9)
+        # sr = StrictRedis(host='127.0.0.1', port=6379, db=9)
+        conn = get_redis_connection('default')
         history_key = 'history_%d' % user.id
-        sku_ids = sr.lrange(history_key, 0, 5)
+        sku_ids = conn.lrange(history_key, 0, 5)
+        print(sku_ids)
         goods_list = []
         for id in sku_ids: # 按照用户的浏览顺序查询列表
             try:
-                goods = GoodsSKU.objects.get(id=id)
+                goods = GoodsSKU.objects.get(id=id.decode())
                 goods_list.append(goods)
             except:
                 continue

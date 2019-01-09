@@ -38,6 +38,8 @@ def generate_static_html():
         title_banner = IndexTypeGoodsBanner.objects.filter(type=type, display_type=0).order_by('index')
         image_banner = IndexTypeGoodsBanner.objects.filter(type=type, display_type=1).order_by('index')
         # 动态给type对象添加两个属性高并保存
+        type.title_banner = title_banner
+        type.image_banner = image_banner
     
     cart_count = 0
     context = {
@@ -51,10 +53,11 @@ def generate_static_html():
     # 模板渲染
     static_index_html = temp.render(context)
     # 生成静态文件
-    save_path = os.path.join(settings.BASE_DIR, 'static/index.html')
-    with open(save_path, 'w') as f:
+    save_path = os.path.join(settings.BASE_DIR, 'templates/static_index.html')
+    with open(save_path, 'w', encoding='utf-8') as f:
         f.write(static_index_html)
     
-    
+if __name__ == '__main':
+    generate_static_html()
 
     

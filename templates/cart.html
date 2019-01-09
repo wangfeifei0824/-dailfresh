@@ -1,4 +1,4 @@
-{% extends 'index.html' %}
+{% extends 'user_center_info.html' %}
 
     {% block title %}
 	<title>天天生鲜-购物车</title>
@@ -7,16 +7,11 @@
     {% block js %}
     {% endblock js %}
 
-    {% block body %}
-	<div class="search_bar clearfix">
-		<a href="{% url 'goods:index' %}" class="logo fl"><img src="images/logo.png"></a>
-		<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;购物车</div>
-		<div class="search_con fr">
-			<input type="text" class="input_text fl" name="" placeholder="搜索商品">
-			<input type="button" class="input_btn fr" name="" value="搜索">
-		</div>		
-	</div>
+    {% block user %}
+        我的购物车
+    {% endblock user %}
 
+    {% block body %}
 	<div class="total_count">全部商品<em>2</em>件</div>	
 	<ul class="cart_list_th clearfix">
 		<li class="col01">商品名称</li>

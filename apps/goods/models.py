@@ -33,14 +33,14 @@ class GoodsSKU(BaseModel):
     desc = models.CharField('商品简介', max_length=256)
     price = models.DecimalField('商品价格', max_length=10, decimal_places=2, max_digits=10)
     unite = models.CharField('商品单位', max_length=20)
-    image = models.ImageField('商品图片', upload_to='goods')
+    image = models.ImageField('商品图片', upload_to='goodssku')
     stock = models.IntegerField('商品库存', default=1)
     sales = models.IntegerField('商品销量', default=0)
     status = models.SmallIntegerField('商品状态', default=1, choices=status_choices)
     
     class Meta:
         db_table = 'df_goods_sku'
-        verbose_name = '商品'
+        verbose_name = '商品SKU'
         verbose_name_plural = verbose_name
     
     def __str__(self):
@@ -64,7 +64,7 @@ class Goods(BaseModel):
 class GoodsImage(BaseModel):
     '''商品图片模型类'''
     sku = models.ForeignKey('GoodsSKU', verbose_name='商品')
-    image = models.ImageField('图片路径', upload_to='goods')
+    image = models.ImageField('图片路径', upload_to='goodsimg')
     
     class Meta:
         db_table = 'df_goods_image'
@@ -78,7 +78,7 @@ class GoodsImage(BaseModel):
 class IndexGoodsBanner(BaseModel):
     '''首页轮播商品展示模型类'''
     sku = models.ForeignKey('GoodsSKU', verbose_name='商品')
-    image = models.ImageField('图片', upload_to='banner')
+    image = models.ImageField('图片', upload_to='indexgoodsbanner')
     index = models.SmallIntegerField('展示顺序', default=0)  # 0 1 2 3
     
     class Meta:
@@ -109,7 +109,7 @@ class IndexPromotionBanner(BaseModel):
     '''首页促销活动模型类'''
     name = models.CharField('活动名称', max_length=20)
     url = models.CharField('活动链接', max_length=256)
-    image = models.ImageField('活动图片', upload_to='banner')
+    image = models.ImageField('活动图片', upload_to='indexpromotionbanner')
     index = models.SmallIntegerField('展示顺序', default=0)  # 0 1 2 3
     
     class Meta:
