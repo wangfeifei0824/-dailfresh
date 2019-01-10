@@ -1,0 +1,292 @@
+		=====天天生鲜=====
+
+
+开发环境：
+	Linux + Django1.11.8 + python3.6.4 + django-tinymce2.6.0 +
+	itsdangerous + celery + django-redis + ...
+
+types: fruit seafood meet egg vegetables ice
+
+一、富文本编辑器
+	1.安装
+		pip install django-tinymce==2.6.0
+	2.配置
+		在settings.py中
+			1.注册：
+				'tinymce'
+			2.配置
+				TINYMCE_DEFAULT_CONFIG = {
+						'theme':'advanced',
+						'width':600,
+						'height':400,
+								}
+			3.
+		在urls.py中
+			url(r'^tinymce/', include('tinymce.urls')
+		在models.py中
+			from tinymce.models import HTMLField
+				grentent = HTMLField()
+	
+二、all方法
+	if all(iterable):
+		xxx
+
+
+三、itsdangerous
+	用于邮件激活
+	1.安装
+		pip install itsdangerous
+	2.使用：
+		from itsdangerous import Time.. as Serializer
+		serilaizer = Serializer('secret_key', '过期时间(s)')
+		res = serializer.dumps(要加密的数据)
+		解密的数据 = serializer.loads(res)
+
+
+四、Django发送邮件
+	1.设置settings.py
+		# 配置发送邮件的信息  163邮箱
+		EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+		EMAIL_HOST = 'smtp.163.com'
+		EMAIL_PORT = 25
+		#发送邮件的邮箱
+		EMAIL_HOST_USER = '17695973603@163.com'
+		#在邮箱中设置的客户端授权密码
+		EMAIL_HOST_PASSWORD = 'xxxx'
+		# EMAIL_USE_TLS = True
+		#收件人看到的发件人
+		EMAIL_FROM = '天天生鲜<17695973603@163.com>'
+	2.发送
+		subject = '天天生鲜注册信息'
+        message = ''
+        html_message = '<h1>%s,欢迎您注册天天生鲜会员</h1>...'
+        sender = settings.EMAIL_FROM
+        receiver = [email] #可以设置多个收件人用列表保存
+        sent_status = send_mail(subject, message, sender, receiver, html_message=html_message)
+
+
+五、celery 异步任务队列
+		--使用异步任务发送注册确认邮箱
+				      生成首页的静态页面
+
+	1.安装
+		pip install celery
+	2.启动服务, 监听redis
+		celery -A cerler文件路径 worker -l info
+		celery -A cerler文件路径 worker -l info -P eventlet (win)
+	3.创建APP
+		# django的初始化
+		import os
+		import django
+		os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dailyfresh.settings")
+		django.setup()
+
+		app = Celery('celery_tasks.tasks', broker='redis://127.0.0.1:6379/8')
+
+		@app.task
+		def send_register_active_email(to_email, username, token):
+			xxx
+	4.调用
+		from celery_tasks.tasks import send_register_active_email
+		send_register_active_email.delay(email, username, token)
+		
+
+六、redis
+	1.安装
+		1、Windows安装
+			pip install eventlet windows10需安装，否则报错
+	2.启动服务
+		redis-server --service-start
+    3.连接服务
+		redis-cli.exe -h 127.0.0.1 -p 6379
+	3.选择数据库
+		127.0.0.1:6379> select 8
+	4.常用命令：
+		select index
+		flushall
+		set '键' '值'
+	5.数据类型：
+		string
+		list
+		hash
+		set
+		zset
+	6.创建连接对象：
+		from django_redis import get_redis_connection
+		conn = get_redis_connection('default')
+		cart_key = 'cart_%d' % user.id
+		# cart_count = conn.hlen(cart_key)
+	
+七、配置redis作为Django的缓存和session的后端
+	1.安装django-redis
+		pip install django-redis
+
+	2.设置
+		# 配置ｃａｃｈｅ缓存到ｒｅｄｉｓ的9号数据库
+		CACHES = {
+			"default": {
+				"BACKEND": "django_redis.cache.RedisCache",
+				"LOCATION": "redis://127.0.0.1:6379/9", # redis所在的主机的IP地址
+				"OPTIONS": {
+				"CLIENT_CLASS": "django_redis.client.DefaultClient",
+				}
+			}
+		}
+
+		# 配置session的存储到缓存中，即使用的redis数据库
+		SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+		SESSION_CACHE_ALIAS = "default"
+
+八、cookies 和session
+	1.cookies 用于记住密码
+		response = HttpResponse/redirect(...)
+		response.set_cookie('name', name)
+		response.delete_cookie('name')
+		name = request.COOKIES.get('name')
+	2.session 用于保存用户登录状态
+		login(request, user) 存
+		logout(request)      删
+		
+
+九、Django默认的用户验证模块
+	0.在settings.py中
+		# 指定django 的默认使用的认证模型类
+		AUTH_USER_MODEL = 'user.User'
+	1.在module.py中
+		from django.contrib.auth.models import AbstractUser
+		class User(AbstractUser, BaseModel):
+			'''用户模型类'''
+			class Meta:
+				db_table = 'df_user'
+				verbose_name = '用户'
+				verbose_name_plural = verbose_name
+	2.登录验证
+		0.登录用户名、密码验证
+			from django.contrib.auth import authenticate
+			user = authenticate(username=username,  password=password)
+		1.登录成功后存session
+		from django.contrib.auth import login
+			login(request, user)
+		2.其他页面验证登录状态
+			1.配置登录url地址
+				LOGIN_URL = '/user/loign'
+			2.在urls.py中：
+				from django.contrib.auth.decorators import login_required
+				url(r'^info$', login_required(UserInfoView.as_view()),name='user'),
+			3.在views.py中
+	            next_url = request.GET.get('next', reverse('goods:index'))
+                response = redirect(next_url)
+			4.在html文件的form表单中删除action
+		3.验证用户是否登录
+			if user.is_authenticated:
+				xxx
+			else:
+				xxx
+	3.使用mixin
+		1.新建utils包，mixin.py
+			class LoginRequiredMixin(object):
+				@classmethod
+				def as_view(cls, **initkwargs):
+					view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
+					return login_required(view)
+		2.在views.py中，继承LoginRequiredMixin
+						
+十、使用redis存储历史记录
+		1.数据类型list:
+			history_用户id：[2,3,1,4,6,]
+		1.添加历史记录
+		    conn = get_redis_connection('default')
+            history_key = 'history_%d' % user.id
+            conn.lrem(history_key, 0, sku_id) # 移除
+            conn.lpush(history_key, sku_id) # 增加
+            conn.ltrim(history_key, 0, 4) # 修剪，只保留5条
+			sku_ids = conn.lrange(history_key,0, 4) # 查找，返回一个列表
+            
+
+十一、FastDFS分布式文件存储系统
+	1.哈希值加密
+	2.同一个文件只存储一次
+	3.解决了海量存储问题，存储容量扩展方便
+	4.上传：
+	5.下载：
+	6.安装和配置
+		略
+
+十二、使用redis缓存数据
+	1，存入缓存
+		form django.core.cache import cache
+		cache.set(key, value ,timeout)
+	2,读取缓存：
+		cache.get(key)
+	3.清除缓存
+		cache.delete(key)
+
+十三、首页页面的静态化
+	
+十四、使用redis保存购物车记录
+	1.保存对应商品的类型和数量
+		'cart_用户id':{sku_id:'商品数目',..}
+	2.获取用户购物车商品的条数
+            conn = get_redis_connection('default')
+            cart_key = 'cart_%d' % user.id
+            cart_count = conn.hlen(cart_key)
+
+十五、分页
+    1.生成paginator对象
+        paginator = Paginator.(objects, 2)
+    2.paginator对象常用属性和方法
+        page = paginator.page(index) 获取指定页的内容的对象
+        num_pages = paginator.num_pages 获取总页数
+        page_range = paginator.page_rang 获取页码范围的迭代对象
+    3.page对象常用属性和方法
+        page.has_next() 判断是否有下一页
+        page.has_previous()  判断是否有上一页
+        object_list = page.object_list  获取此页面上的对象列表
+        number = page.number 获取当前的额页码数
+
+
+十六、搜索
+    1.安装django-haystack\whoosh
+        pip install django-haystack
+        pip install whoosh
+    2.在settings.py中
+    # 全文检索框架配置
+        HAYSTACK_CONNECTIONS = {
+            'default': {
+                # 使用whoosh引擎
+                'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+                # 'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
+                # 索引文件路径
+                'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+            }
+        }
+
+        # 当添加、修改、删除数据时，自动生成索引
+        HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+        # 控制全文检索显示的条数
+        HAYSTACK_SEARCH_RESULTS_PER_PAGE=1
+    3.创建索引文件
+        1.在要检索的模型类的文件夹下建立searchindexes.py
+            建立索引类
+        2.在templates文件夹下
+            建立 indexes/模块名/模型类名_text.txt
+                {{ object.name }} # 根据商品的名称建立索引
+                {{ object.desc }} # 根据商品的简介建立索引
+                {{ object.goods.detail }} # 根据商品的详情建立索引
+        3.创建索引的数据
+            python manage.py rebuild_index
+        4.配置路由
+            url(r'^search', include('haystack.urls'))
+            <form action="/search" method="get">
+        5.模板设置
+            三个对象
+                搜索的关键字：{{ query }}<br/>
+                当前页的Page对象：{{ page }}<br/>
+                    {% for item in page %}
+                        <li>{{ item.object }}</li>
+                    {% endfor %}
+                分页的Paginator对象:{{ paginator }}<br/>
+                总页数:{{ paginator.num_pages }}
+
+            templates/search/search.html

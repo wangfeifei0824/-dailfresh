@@ -11,6 +11,8 @@ Django web后端开发电商项目--dailfresh
     django-redis(pip安装）
     redis
     mysql(需手动创建数据库dailyfresh)
+    django-haystack(pip安装)
+    whoosh(pip安装)
 
 2.启动项目
     1.启动redis数据库服务
