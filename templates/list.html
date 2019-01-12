@@ -5,6 +5,9 @@
     {% endblock title %}
 
     {% block js %}
+    {% load staticfiles %}
+    <script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/addcart.js' %}"></script>
     {% endblock js %}
 
 
@@ -63,11 +66,11 @@
                 {% for sku in skus_page.object_list %}
 				<li>
 					<a href="{% url 'goods:detail' sku.id %}"><img src="/static/images/{{ sku.image }}"></a>
-					<h4><a href="detail.html">{{ sku.name }}</a></h4>
+					<h4><a href="{% url 'goods:detail' item.object.id %}">{{ sku.name }}</a></h4>
 					<div class="operate">
 						<span class="prize">￥{{ sku.price }}</span>
 						<span class="unit">{{ sku.price }}/{{ sku.unite }}</span>
-						<a href="#" class="add_goods" title="加入购物车"></a>
+						<a id="add_cart2" class="add_goods list_add_cart" title="加入购物车" sku_id="{{ sku.id }}" style="cursor: pointer"></a>
 					</div>
 				</li>
                 {% endfor %}

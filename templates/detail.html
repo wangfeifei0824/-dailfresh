@@ -50,6 +50,7 @@
 			<div class="goods_num clearfix">
 				<div class="num_name fl">数 量：</div>
 				<div class="num_add fl">
+                    <div style="display: none" id="sku_id">{{ sku.id }}</div>
 					<input type="text" class="num_show fl" value="1">
 					<a href="javascript:;" class="add fr">+</a>
 					<a href="javascript:;" class="minus fr">-</a>	
@@ -89,18 +90,23 @@
 
 		<div class="r_wrap fr clearfix">
 			<ul class="detail_tab clearfix">
-				<li class="active">商品介绍</li>
-				<li>评论</li>
+				<li class="active" id="introduce">商品介绍</li>
+				<li  id="comment">评论</li>
 			</ul>
-			<div class="tab_content">
+
+			<div class="tab_content" id="comblock" style="display:none">
 				<dl>
                     {% for order in sku_orders %}
-					<dt>评价时间：{{ order.update_time }} 评论人：{{ order.order.user }}</dt>
-					<dd>{{ order.comment }}</dd>
+					    <dt>评价时间：{{ order.update_time }} 评论人：{{ order.order.user }}</dt>
+					    <dd>{{ order.comment }}</dd>
+                    {% empty %}
+                        <dt>暂时没有该商品的评论信息</dt>
+                        <dd></dd>
                     {% endfor %}
 				</dl>
 			</div>
-			<div class="tab_content">
+
+			<div class="tab_content" id="intblock">
 				<dl>
 					<dt>商品详情：</dt>
 {#					<dd>{{ sku.goods.detail | striptags }}</dd>#}
@@ -119,7 +125,9 @@
 
     {% block bottomjs %}
     {% load staticfiles %}
-	<script type="text/javascript" src="{% static 'js/jquery-1.12.2.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/detail.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/addcart.js' %}"></script>
 	<script type="text/javascript">
 		var $add_x = $('#add_cart').offset().top;
 		var $add_y = $('#add_cart').offset().left;
@@ -127,17 +135,18 @@
 		var $to_x = $('#show_count').offset().top;
 		var $to_y = $('#show_count').offset().left;
 
-		$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
-		$('#add_cart').click(function(){
-			$(".add_jump").stop().animate({
-				'left': $to_y+7,
-				'top': $to_x+7},
-				"fast", function() {
-					$(".add_jump").fadeOut('fast',function(){
-						$('#show_count').html(2);
-					});
+		$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'});
+		{#$('#add_cart').click(function(){#}
 
-			});
-		})
+			{#$(".add_jump").stop().animate({#}
+			{#	'left': $to_y+7,#}
+			{#	'top': $to_x+7},#}
+			{#	"fast", function() {#}
+			{#		$(".add_jump").fadeOut('fast',function(){#}
+			{#			$('#show_count').html(2);#}
+			{#		});#}
+            {##}
+			//)};
+		//})
 	</script>
 	{% endblock bottomjs %}

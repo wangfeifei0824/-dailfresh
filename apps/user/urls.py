@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from .views import *
-
+from apps.cart.views import CartAddView
 urlpatterns = [
     url(r'^register$', RegisterView.as_view(), name='register'),
     url(r'^active/(?P<token>.*?)$', ActiveView.as_view(), name='active'),
@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^info$', UserInfoView.as_view(), name='user'),
     url(r'^order$', UserOrderView.as_view(), name='order'),
     url(r'^address$', AddressView.as_view(), name='address'),
+    url(r'^cart/add', CartAddView.as_view(), name='add'),
 ]

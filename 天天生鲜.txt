@@ -213,6 +213,7 @@ types: fruit seafood meet egg vegetables ice
 		略
 
 十二、使用redis缓存数据
+
 	1，存入缓存
 		form django.core.cache import cache
 		cache.set(key, value ,timeout)
@@ -224,12 +225,22 @@ types: fruit seafood meet egg vegetables ice
 十三、首页页面的静态化
 	
 十四、使用redis保存购物车记录
+
 	1.保存对应商品的类型和数量
 		'cart_用户id':{sku_id:'商品数目',..}
 	2.获取用户购物车商品的条数
             conn = get_redis_connection('default')
             cart_key = 'cart_%d' % user.id
             cart_count = conn.hlen(cart_key)
+    3.添加购物车
+        conn.hset(cart_key, sku_id, cart_count))
+    4.获取购物车数量
+        cart_count = conn.hget(cart_key, sku_id)
+    5.获取购物车信息
+        cart_dict = conn.hgetall(cart_key)  返回一个字典
+    6.删除购物车记录
+        conn.hdel(cart_key, sku_id,)
+
 
 十五、分页
     1.生成paginator对象
@@ -242,7 +253,7 @@ types: fruit seafood meet egg vegetables ice
         page.has_next() 判断是否有下一页
         page.has_previous()  判断是否有上一页
         object_list = page.object_list  获取此页面上的对象列表
-        number = page.number 获取当前的额页码数
+        number = page.number 获取当前的页码数
 
 
 十六、搜索
@@ -290,3 +301,17 @@ types: fruit seafood meet egg vegetables ice
                 总页数:{{ paginator.num_pages }}
 
             templates/search/search.html
+    4.jieba 分词包
+        1.安装
+            pip install jieba
+        2.配置
+    5.自定义搜索类
+
+十七、提交订单
+十八、mysql事物
+    原子性
+    稳定性
+    隔离性
+    可靠性
+    commit
+    rollback

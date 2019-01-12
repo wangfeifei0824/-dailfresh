@@ -8,6 +8,7 @@ from django_redis import get_redis_connection
 from apps.goods.models import *
 from apps.order.models import OrderGoods
 
+from haystack.views import SearchView
 
 # Create your views here.
 # /
@@ -170,3 +171,53 @@ class ListView(View):
         }
         
         return render(request, 'list.html', context)
+
+
+# 自定义搜索类
+class MySearchview(SearchView):
+    def get_context(self):
+        # 获取分类
+        types = GoodsType.objects.all()
+        # 获取购物车信息
+        cart_count = 0
+        user = self.request.user
+        if user.is_authenticated:
+            # 用户已经登录
+            conn = get_redis_connection('default')
+            cart_key = 'cart_%d' % user.id
+            cart_count = conn.hlen(cart_key)
+        # # 获取新品信息
+        new_skus = GoodsSKU.objects.all().order_by('-create_time')[:2]
+        # print(new_skus)
+        (paginator, page) = self.build_page()
+        num_page = paginator.num_pages  # 返回页面总数
+        # 分页之后宗页数不足5页
+        # 当前页属于前三页，显示1-5页
+        # 当前页属于后三页，显示后5页
+        # 其他的情况喜爱男士当前页的前2页，当前页，当前页的后2页
+        if num_page < 5:
+            page_range = range(1, num_page + 1)
+        elif page.number <= 3:
+            page_range = range(1, 6)
+        elif num_page - page.number <= 2:
+            page_range = range(num_page - 4, num_page + 1)
+        else:
+            page_range = range(page - 2, page + 3)
+        context = {
+            'query': self.query,
+            'form': self.form,
+            'page': page,
+            # 'paginator': paginator,
+            'suggestion': None,
+            'types':types,
+            'cart_count':cart_count,
+            'new_skus':new_skus,
+            'page_range':page_range,
+        }
+
+        if hasattr(self.results, 'query') and self.results.query.backend.include_spelling:
+            context['suggestion'] = self.form.get_suggestion()
+
+        context.update(self.extra_context())
+
+        return context

@@ -4,7 +4,7 @@ Django web后端开发电商项目--dailfresh
 1.开发环境
     python3.6.4
     django1.11.8
-    django-tinymic2.6.0 (pip安装)
+    django-tinymce2.6.0 (pip安装)
     itsdangerous (pip安装)
     celery(pip安装)
     eventlet(pip安装，Windows10需安装，否则报错)
@@ -15,6 +15,8 @@ Django web后端开发电商项目--dailfresh
     whoosh(pip安装)
 
 2.启动项目
+    0.连接到mysql数据库
+        创建一个名为dailyfresh的数据库
     1.启动redis数据库服务
         redis-server
     2.在项目的根目录下，依次执行

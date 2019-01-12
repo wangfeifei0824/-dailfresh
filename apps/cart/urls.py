@@ -14,8 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-
+from .views import *
 
 urlpatterns = [
-
+    url(r'^add$', CartAddView.as_view(), name='cartadd'),
+    url(r'^update', CartUpdate.as_view(), name='cartupdate'),
+    url(r'^delete', CartDelete.as_view(), name='cartdelete'),
+    url(r'^cart', CartView.as_view(), name='cart'),
+    
 ]
