@@ -32,7 +32,7 @@
 					<span>|</span>
 					<a href="/user/info">用户中心</a>
 					<span>|</span>
-					<a href="cart.html">我的购物车</a>
+					<a href="/cart/cart">我的购物车</a>
 					<span>|</span>
 					<a href="/user/order">我的订单</a>
 				</div>
@@ -41,25 +41,29 @@
 	</div>
     
 
-    
 
+    
 	<div class="search_bar clearfix">
-		<a href="/" class="logo fl"><img src="/static/images/logo.png"></a>
+		<a href="/index" class="logo fl"><img src="/static/images/logo.png"></a>
 		<div class="search_con fl">
-			<input type="text" class="input_text fl" name="" placeholder="搜索商品">
-			<input type="button" class="input_btn fr" name="" value="搜索">
+            <form action="/search" method="get">
+			<input type="text" class="input_text fl" name="q" placeholder="搜索商品" value="">
+			<input type="submit" class="input_btn fr" name="" value="搜索">
+            </form>
 		</div>
 		<div class="guest_cart fr">
-			<a href="#" class="cart_name fl">我的购物车</a>
-			<div class="goods_count fl" id="show_count">1</div>
+			<a href="/cart/cart" class="cart_name fl">我的购物车</a>
+			<div class="goods_count fl" id="show_count">0</div>
 		</div>
 	</div>
+    
 
+    
 	<div class="navbar_con">
 		<div class="navbar">
 			<h1 class="fl">全部商品分类</h1>
 			<ul class="navlist fl">
-				<li><a href="">首页</a></li>
+				<li><a href="/index">首页</a></li>
 				<li class="interval">|</li>
 				<li><a href="">手机生鲜</a></li>
 				<li class="interval">|</li>
@@ -70,49 +74,46 @@
 
 	<div class="center_con clearfix">
 		<ul class="subnav fl">
-            
-			<li><a href="#model01" class="fruit">新鲜水果</a></li>
-            
-			<li><a href="#model02" class="seafood">海鲜水产</a></li>
-            
-			<li><a href="#model03" class="meet">猪牛羊肉</a></li>
-            
-			<li><a href="#model04" class="egg">禽类蛋品</a></li>
-            
-			<li><a href="#model05" class="vegetables">新鲜蔬菜</a></li>
-            
-			<li><a href="#model06" class="ice">速冻食品</a></li>
-            
 
-
-
-
+            
+			<li><a href="/list?type_id=2&page=1&sort=default" class="fruit">新鲜水果</a></li>
+            
+			<li><a href="/list?type_id=3&page=1&sort=default" class="seafood">海鲜水产</a></li>
+            
+			<li><a href="/list?type_id=4&page=1&sort=default" class="meet">猪牛羊肉</a></li>
+            
+			<li><a href="/list?type_id=5&page=1&sort=default" class="egg">禽类蛋品</a></li>
+            
+			<li><a href="/list?type_id=6&page=1&sort=default" class="vegetables">新鲜蔬菜</a></li>
+            
+			<li><a href="/list?type_id=7&page=1&sort=default" class="ice">速冻食品</a></li>
+            
 
 		</ul>
 		<div class="slide fl">
 			<ul class="slide_pics">
                 
-				<li><a href="#"><img src="/static/images/indexgoodsbanner/slide02.jpg" alt="大兴大鹏草莓"></a></li>
+				<li><a href="/detail/1"><img src="/static/images/indexgoodsbanner/slide02.jpg" alt="大兴大鹏草莓"></a></li>
                 
-				<li><a href="#"><img src="/static/images/indexgoodsbanner/slide04.jpg" alt="青岛野生大虾"></a></li>
+				<li><a href="/detail/2"><img src="/static/images/indexgoodsbanner/slide04.jpg" alt="青岛野生大虾"></a></li>
                 
-				<li><a href="#"><img src="/static/images/indexgoodsbanner/slide03.jpg" alt="羔羊排 烧烤食材"></a></li>
+				<li><a href="/detail/3"><img src="/static/images/indexgoodsbanner/slide03.jpg" alt="羔羊排 烧烤食材"></a></li>
                 
-				<li><a href="#"><img src="/static/images/indexgoodsbanner/slide02_dz6rAL5.jpg" alt="奶油水果蛋糕"></a></li>
+				<li><a href="/detail/6"><img src="/static/images/indexgoodsbanner/slide02_dz6rAL5.jpg" alt="奶油水果蛋糕"></a></li>
                 
 
-
-
-			</ul>
 			<div class="prev"></div>
 			<div class="next"></div>
 			<ul class="points"></ul>
+            </ul>
 		</div>
 		<div class="adv fl">
+
             
 
 		</div>
 	</div>
+
 
     
 	<div class="list_model">
@@ -120,11 +121,13 @@
 			<h3 class="fl" id="model01">新鲜水果</h3>
 			<div class="subtitle fl">
 				<span>|</span>
+
+                
+				<a href="/detail/7">天宝香蕉</a>
                 
 
-
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list?type_id=2&page=1&sort=default" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
@@ -132,26 +135,17 @@
 			<ul class="goods_list fl">
                 
 				<li>
-					<h4><a href="#">大兴大鹏草莓</a></h4>
-					<a href="#"><img src="/static/images/goodssku/goods003.jpg"></a>
+					<h4><a href="/detail/1">大兴大鹏草莓</a></h4>
+					<a href="/detail/1"><img src="/static/images/goodssku/goods003.jpg"></a>
 					<div class="prize">¥ 16.80</div>
 				</li>
                 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+				<li>
+					<h4><a href="/detail/8">越南进口火龙果</a></h4>
+					<a href="/detail/8"><img src="/static/images/goodssku/57ab290aN34f76b37.jpg"></a>
+					<div class="prize">¥ 33.00</div>
+				</li>
+                
 
 			</ul>
 		</div>
@@ -162,11 +156,11 @@
 			<h3 class="fl" id="model02">海鲜水产</h3>
 			<div class="subtitle fl">
 				<span>|</span>
+
                 
 
-
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list?type_id=3&page=1&sort=default" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
@@ -174,26 +168,11 @@
 			<ul class="goods_list fl">
                 
 				<li>
-					<h4><a href="#">青岛野生大虾</a></h4>
-					<a href="#"><img src="/static/images/goodssku/goods018.jpg"></a>
+					<h4><a href="/detail/2">青岛野生大虾</a></h4>
+					<a href="/detail/2"><img src="/static/images/goodssku/goods018.jpg"></a>
 					<div class="prize">¥ 47.99</div>
 				</li>
                 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 			</ul>
 		</div>
@@ -204,11 +183,11 @@
 			<h3 class="fl" id="model03">猪牛羊肉</h3>
 			<div class="subtitle fl">
 				<span>|</span>
+
                 
 
-
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list?type_id=4&page=1&sort=default" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
@@ -216,26 +195,11 @@
 			<ul class="goods_list fl">
                 
 				<li>
-					<h4><a href="#">羔羊排 烧烤食材</a></h4>
-					<a href="#"><img src="/static/images/goodssku/57a9a823N2c38934e.jpg"></a>
+					<h4><a href="/detail/3">羔羊排 烧烤食材</a></h4>
+					<a href="/detail/3"><img src="/static/images/goodssku/57a9a823N2c38934e.jpg"></a>
 					<div class="prize">¥ 59.00</div>
 				</li>
                 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 			</ul>
 		</div>
@@ -246,11 +210,11 @@
 			<h3 class="fl" id="model04">禽类蛋品</h3>
 			<div class="subtitle fl">
 				<span>|</span>
+
                 
 
-
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list?type_id=5&page=1&sort=default" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
@@ -258,26 +222,11 @@
 			<ul class="goods_list fl">
                 
 				<li>
-					<h4><a href="#">大哥 散养鸡蛋</a></h4>
-					<a href="#"><img src="/static/images/goodssku/5927942eN14545b4d.jpg"></a>
+					<h4><a href="/detail/4">大哥 散养鸡蛋</a></h4>
+					<a href="/detail/4"><img src="/static/images/goodssku/5927942eN14545b4d.jpg"></a>
 					<div class="prize">¥ 108.99</div>
 				</li>
                 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 			</ul>
 		</div>
@@ -288,11 +237,11 @@
 			<h3 class="fl" id="model05">新鲜蔬菜</h3>
 			<div class="subtitle fl">
 				<span>|</span>
+
                 
 
-
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list?type_id=6&page=1&sort=default" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
@@ -300,26 +249,11 @@
 			<ul class="goods_list fl">
                 
 				<li>
-					<h4><a href="#">韩国风味泡菜</a></h4>
-					<a href="#"><img src="/static/images/goodssku/57a9a823N2c38934e_7UZJDOO.jpg"></a>
+					<h4><a href="/detail/5">韩国风味泡菜</a></h4>
+					<a href="/detail/5"><img src="/static/images/goodssku/57a9a823N2c38934e_7UZJDOO.jpg"></a>
 					<div class="prize">¥ 17.50</div>
 				</li>
                 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 			</ul>
 		</div>
@@ -330,11 +264,11 @@
 			<h3 class="fl" id="model06">速冻食品</h3>
 			<div class="subtitle fl">
 				<span>|</span>
+
                 
 
-
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list?type_id=7&page=1&sort=default" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
@@ -342,227 +276,18 @@
 			<ul class="goods_list fl">
                 
 				<li>
-					<h4><a href="#">奶油水果蛋糕</a></h4>
-					<a href="#"><img src="/static/images/goodssku/59eaf320N10e96d9e.jpg"></a>
+					<h4><a href="/detail/6">奶油水果蛋糕</a></h4>
+					<a href="/detail/6"><img src="/static/images/goodssku/59eaf320N10e96d9e.jpg"></a>
 					<div class="prize">¥ 150.00</div>
 				</li>
                 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 			</ul>
 		</div>
 	</div>
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
+
 
 	<div class="footer">
 		<div class="foot_link">
@@ -582,7 +307,7 @@
     
 
     
-
+    
 	<script type="text/javascript" src="/static/js/slideshow"></script>
 	<script type="text/javascript">
 		BCSlideshow('focuspic');
@@ -597,7 +322,7 @@
 		}
 
 		oFruit.onclick = function(){
-			window.location.href = '/';
+			window.location.href = '/index';
 		}
 	</script>
     

@@ -21,15 +21,12 @@ $(function () {
     //更新购物车
     function update_cart_info(sku_id, count) {
         var status = false;
-        // var csrf = $('input[name=csrfmiddlewaretoken]').val();
-        // console.log(csrf);
         data = {
             'sku_id': sku_id,
             'count': count,
-            // 'csrf': csrf,
         };
         $.ajax({
-            url: 'update',
+            url: '/cart/update',
             type: 'get',
             data: data,
             dataType: 'json',
@@ -98,6 +95,7 @@ $(function () {
         } else {
             count -= 1;
         }
+        console.log(count);
         //更新购物车
         var status = update_cart_info(sku_id, count);
         // 更新页面显示

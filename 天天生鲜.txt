@@ -312,6 +312,41 @@ types: fruit seafood meet egg vegetables ice
     原子性
     稳定性
     隔离性
+        1.事务隔离级别
+            1.读取未提交的内容  read uncommit
+            2.读取提交的内容    read commit
+            3.可重复读         repeatable read  mysql 默认
+            4.不可重复读       non-repeatable read
+
     可靠性
     commit
     rollback
+    1.设置事务
+    from django.db import transaction
+        @transaction.atomic
+        def post(self, request):
+    2.设置保存点
+        save_id= transaction.savepoint()
+        ...
+        transaction.savepoint_rollback(save_id)
+        transaction.savepoint_commit(save_id)
+
+十九、订单并发
+    1.悲观锁 - 冲突较多时的使用
+        select * from goods where id=1 for update
+        sku = GoodsSKU.objects.select_for_update().get(id=sku.id)
+
+    2.乐观锁 - 冲突比较少时使用
+        判断更新适时库存和查询的库存是否一致, 返回受影响的行数
+        update goods set stock=0, sales=1 where id=7 and stock=1
+        res = GoodsSKU.objects.filtet(id=sku.id, stock=orgin_stock).update(stock=new_stock,
+        if res == 0:
+            transaction.savepoint_rollback(save_id)
+
+        1.修改mysql的配置文件
+            transaction-isolation =
+        2.重启mysql服务
+
+二十、支付
+
+

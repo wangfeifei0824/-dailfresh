@@ -12,8 +12,6 @@
 	{% block body %}
 	<h3 class="common_title">确认收货地址</h3>
 
-    <form action="{% url 'order:commit' %}" method="post">
-    {% csrf_token %}
 	<div class="common_list_con clearfix">
 		<dl>
 			<dt>寄送到：</dt>
@@ -75,10 +73,9 @@
 	</div>
 
 	<div class="order_submit clearfix">
-{#		<a href="javascript:;" id="order_btn">提交订单</a>#}
-		<input type="submit" value="提交订单" style="width:160px;height:40px;line-height:40px;text-align:center;background-color:#47aa34;color:#fff;font-size:16px;display:block;float:right;border:none;">
+		<a href="javascript:;" id="order_btn" skus="{{ sku_ids_str }}">提交订单</a>
+{#		<input type="submit" value="确认订单" style="width:160px;height:40px;line-height:40px;text-align:center;background-color:#47aa34;color:#fff;font-size:16px;display:block;float:right;border:none;">#}
 	</div>
-    </form>
     {% endblock body %}
 
     {% block div %}
@@ -93,21 +90,41 @@
 
     {% block bottomjs %}
     {% load staticfiles %}
-	<script type="text/javascript" src="{% static 'js/jquery-1.12.2.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
 	<script type="text/javascript">
 		$('#order_btn').click(function() {
-			localStorage.setItem('order_finish',2);
+		    var addr_id = $('input[name="addr_id"]:checked').val();
+		    var pay_method = $('input[name="pay_style"]:checked').val();
+		    var sku_ids_str = $(this).attr('skus');
+		    var data = {
+		        'addr_id':addr_id,
+                'pay_method':pay_method,
+                'sku_ids_str':sku_ids_str,
+            };
+		    $.ajax({
+                url:'/order/commit',
+                data:data,
+                dataType:'json',
+                async: false,
+                success:function (data) {
+                    if (data.status == '1'){
+                        {#alert(data.msg);#}
+                        localStorage.setItem('order_finish',2);
+			            $('.popup_con').fadeIn('fast', function() {
+				            setTimeout(function(){
+					            $('.popup_con').fadeOut('fast',function(){
+						        window.location.href = '{% url 'user:order' %}?page=1';
+					            });
+				            },3000)
 
-			$('.popup_con').fadeIn('fast', function() {
+			            });
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        })
 
-				setTimeout(function(){
-					$('.popup_con').fadeOut('fast',function(){
-						window.location.href = 'index.html';
-					});
-				},3000)
-
-			});
-		});
 	</script>
     {% endblock bottomjs %}
 

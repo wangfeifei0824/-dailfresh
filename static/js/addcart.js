@@ -11,14 +11,14 @@ $(function () {
         });
     }
 
-    //加入购物车
+    //加入购物车-详情页
     function add_cart(sku_id, count) {
         var data = {
             'sku_id':sku_id,
             'count': count,
         };
         $.ajax({
-            url: 'http://localhost:8000/cart/add',
+            url: '/cart/add',
             type: 'get',
             data:data,
             dataTyep:'json',
@@ -43,7 +43,7 @@ $(function () {
             'count': count,
         };
         $.ajax({
-            url: 'cart/add',
+            url: '/cart/add',
             type: 'get',
             data:data,
             dataTyep:'json',

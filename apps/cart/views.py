@@ -37,12 +37,13 @@ class CartAddView(View):
         else:
             cart_count = count
             # 校验商品的库存
-        if count > sku.stock:
+        if cart_count > sku.stock:
             return JsonResponse({'status': 0, 'msg': '商品库存不足'})
+        print(count, sku.stock)
         conn.hset(cart_key, sku_id, cart_count)
         # 获取购物车数量
         cart_count = conn.hlen(cart_key)
-        print('cart', cart_count)
+        # print('cart', cart_count)
         return JsonResponse({'status': 1, 'msg': '添加成功', 'cart_count': cart_count})
 
 
@@ -86,7 +87,7 @@ class CartUpdate(View):
             return JsonResponse({'status': 0, 'msg': '用户未登录'})
         sku_id = request.GET.get('sku_id')
         count = request.GET.get('count')
-        print(sku_id, count)
+        # print(sku_id, count)
         # 数据校验
         if not all([sku_id, count]):
             return JsonResponse({'status': 0, 'msg': '数据不完整'})
@@ -101,6 +102,7 @@ class CartUpdate(View):
             # 校验商品的库存
         if count > sku.stock:
             return JsonResponse({'status': 0, 'msg': '商品库存不足'})
+        # print('cart', count, sku.stock)
         # 更新购物车
         conn = get_redis_connection('default')
         cart_key = 'cart_%d' % user.id

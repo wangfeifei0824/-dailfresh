@@ -3,6 +3,7 @@ import re
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -13,6 +14,7 @@ from redis import StrictRedis
 
 from apps.user.models import User, Address
 from apps.goods.models import GoodsSKU
+from apps.order.models import OrderInfo, OrderGoods
 from celery_tasks.tasks import send_register_active_email
 from utils.mixin import LoginRequiredMixin
 
@@ -199,5 +201,56 @@ class UserOrderView(LoginRequiredMixin, View):
     
     def get(self, request):
         '''显示用户中心-订单页'''
-        # 获取用户的订单信息
-        return render(request, 'user_center_order.html')
+        # 获取数据
+        user = request.user
+        page = request.GET.get('page')
+
+        if user.is_authenticated():
+            # 获取购物车信息
+            conn = get_redis_connection('default')
+            cart_key = 'cart_%d' % user.id
+            cart_count = conn.hlen(cart_key)
+        
+        # 查询数据
+        orders = OrderInfo.objects.filter(user=user).order_by('-create_time')
+        for order in orders:
+            order.status = order.ORDER_STATUS[order.order_status]
+            order_sku_list = OrderGoods.objects.filter(order_id=order.order_id)
+            for order_sku in order_sku_list:
+                amount = order_sku.price * order_sku.count
+                order_sku.amount = amount
+            order.sku_list = order_sku_list
+          
+        paginator = Paginator(orders, 1)
+        # 数据校验
+        try:
+            page = int(page)
+        except Exception as e:
+            page = 1
+        if page > paginator.num_pages:
+            page = 1
+        # 获取对应页码的数据
+        order_page = paginator.page(page)
+        # 页码列表处理
+        num_pages = paginator.num_pages  # 返回页面总数
+        # 分页之后宗页数不足5页
+        # 当前页属于前三页，显示1-5页
+        # 当前页属于后三页，显示后5页
+        # 其他的情况喜爱男士当前页的前2页，当前页，当前页的后2页
+        if num_pages < 5:
+            pages = range(1, num_pages + 1)
+        elif page <= 3:
+            pages = range(1, 6)
+        elif num_pages - page <= 2:
+            pages = range(num_pages - 4, num_pages + 1)
+        else:
+            pages = range(page - 2, page + 3)
+            
+        context = {
+            'order_page':order_page,
+            'pages':pages,
+            'cart_count':cart_count,
+        }
+        
+        return render(request, 'user_center_order.html', context)
+

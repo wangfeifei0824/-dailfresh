@@ -18,5 +18,9 @@ from .views import *
 
 urlpatterns = [
     url(r'^place$', OrderView.as_view(), name='place'),
-    url(r'^pay', OrderCommitView.as_view(), name='commit'),
+    url(r'^commit', OrderCommitView.as_view(), name='commit'),
+    url(r'^pay', OrderPayView.as_view(), name='pay'),
+    url(r'^deliver', OrderPayView.as_view(), name='deliver'),
+    url(r'^receiver', OrderPayView.as_view(), name='receiver'),
+    url(r'^comment', OrderPayView.as_view(), name='comment'),
 ]
