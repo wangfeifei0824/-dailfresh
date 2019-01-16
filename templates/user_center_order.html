@@ -31,7 +31,8 @@
 						<tr>
 							<td width="55%">
                                 {% for sku in order.sku_list %}
-								<ul class="order_goods_list clearfix">					
+								<ul class="order_goods_list clearfix">
+                                    <div  style="display: none" sku_name="{{ sku.sku.name }}" sku_id="{{ sku.id }}" class="skus"></div>
 									<li class="col01"><img src="/static/images/{{ sku.sku.image }}"></li>
 									<li class="col02">{{ sku.sku.name }}<em>{{ sku.price }}元/{{ sku.sku.unite }}</em></li>
 									<li class="col03">{{ sku.count }}</li>
@@ -45,9 +46,9 @@
                             {% if order.order_status == 1 %}
 							    <td width="15%"><a href="#" class="oper_btn go_pay">去付款</a></td>
                             {% elif order.order_status == 2 %}
-							    <td width="15%"><a href="#" class="oper_btn deliver_goods">待发货</a></td>                                       {% elif order.order_status == 3 %}
-							    <td width="15%"><a href="#" class="oper_btn receive_goods">待收货</a></td>                                       {% elif order.order_status == 4 %}
-							    <td width="15%"><a href="#" class="oper_btn comment">待评价</a></td>                                       {% else %}
+							    <td width="15%"><a href="#" class="oper_btn deliver">待发货</a></td>                                {% elif order.order_status == 3 %}
+							    <td width="15%"><a href="#" class="oper_btn receiver">待收货</a></td>                                {% elif order.order_status == 4 %}
+							    <td width="15%"><a href="#" class="oper_btn comment">待评价</a></td>                                {% else %}
 							    <td width="15%"><a href="#" class="oper_btn complete">已完成</a></td>
                             {% endif%}
 						</tr>
@@ -61,7 +62,7 @@
                     {% endif %}
                     {% for index in pages %}
                         {% if index == order_page.number %}
-					        <a href="{% url 'user:order' %}?page={{ index }}" class="active">{{ index }}</a>
+					        <a href="{% url 'user:order' %}?page={{ index }}" class="active page_no">{{ index }}</a>
                         {% else %}
                             <a href="{% url 'user:order' %}?page={{ index }}">{{ index }}</a>
                         {% endif %}
@@ -75,7 +76,7 @@
     {% endblock body %}
 {#---------------pay----------------#}
     {% block div %}
-    <div class="popup_con">
+    <div class="popup_con pay">
             <div class="popup">
 			<p>支付成功！</p>
 		</div>
@@ -119,6 +120,7 @@
 {#    ---------------------------------------#}
 		$('.go_pay').click(function() {
 		    var order_id = $('.order_id').text();
+		    var page_no = $('.page_no').text();
 		    $.ajax({
                 url:'/order/pay',
                 data:{'order_id':order_id},
@@ -130,9 +132,9 @@
 			            $('.pay').fadeIn('fast', function() {
 				            setTimeout(function(){
 					            $('.pay').fadeOut('fast',function(){
-						        window.location.href = '{% url 'user:order' %}?page=1';
+						        window.location.href = '{% url 'user:order' %}?page=' + page_no;
 					            });
-				            },3000)
+				            },1000)
 
 			            });
                     } else {
@@ -144,6 +146,8 @@
 
 		$('.deliver').click(function() {
 		    var order_id = $('.order_id').text();
+		    var page_no = $('.page_no').text();
+		    console.log(page_no);
 		    $.ajax({
                 url:'/order/deliver',
                 data:{'order_id':order_id},
@@ -155,9 +159,9 @@
 			            $('.deliver1').fadeIn('fast', function() {
 				            setTimeout(function(){
 					            $('.deliver1').fadeOut('fast',function(){
-						        window.location.href = '{% url 'user:order' %}?page=1';
+						        window.location.href = '{% url 'user:order' %}?page=' + page_no;
 					            });
-				            },3000)
+				            },1000)
 
 			            });
                     } else {
@@ -169,6 +173,7 @@
 
 		$('.receiver').click(function() {
 		    var order_id = $('.order_id').text();
+		    var page_no = $('.page_no').text();
 		    $.ajax({
                 url:'/order/receiver',
                 data:{'order_id':order_id},
@@ -180,9 +185,9 @@
 			            $('.receiver1').fadeIn('fast', function() {
 				            setTimeout(function(){
 					            $('.receiver1').fadeOut('fast',function(){
-						        window.location.href = '{% url 'user:order' %}?page=1';
+						        window.location.href = '{% url 'user:order' %}?page=' + page_no;
 					            });
-				            },3000)
+				            },1000)
 
 			            });
                     } else {
@@ -193,7 +198,38 @@
         })
 
 		$('.comment').click(function() {
-		    var comment = prompt('亲，您对该商品作何评价');
+            var order_id = $('.order_id').text();
+		    var page_no = $('.page_no').text();
+		    $('.skus').each(function () {
+		        var sku_id = $(this).attr('sku_id');
+		        var sku_name = $(this).attr('sku_name');
+		        console.log(sku_id);
+		        console.log(sku_name);
+                var comment = prompt('亲，您对' + sku_name + '作何评价');
+                $.ajax({
+                url:'/order/comment',
+                data:{'order_id':order_id,'comment':comment, 'sku_id':sku_id},
+                dataType:'json',
+                async: false,
+                success:function (data) {
+                    if (data.status == '1'){
+                        localStorage.setItem('order_finish',2);
+                        $('.comment1').fadeIn('fast', function() {
+                            setTimeout(function(){
+                                $('.comment1').fadeOut('fast',function(){
+                                window.location.href = '{% url 'user:order' %}?page=' + page_no;
+                                });
+                            },1000)
+
+                        });
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+                });
+            });
+
+
 
 		    $.ajax({
                 url:'/order/comment',
@@ -206,9 +242,9 @@
 			            $('.comment1').fadeIn('fast', function() {
 				            setTimeout(function(){
 					            $('.comment1').fadeOut('fast',function(){
-						        window.location.href = '{% url 'user:order' %}?page=1';
+						        window.location.href = '{% url 'user:order' %}?page=' + page_no;
 					            });
-				            },3000)
+				            },1000)
 
 			            });
                     } else {

@@ -156,22 +156,34 @@ $(function () {
             dataType: 'json',
             async: false,
             success: function (data) {
-                console.log('ok');
+                // console.log('ok');
                 if (data.status == 1) {
                     // console.log($(this).parents('ul'));
                     // $(this).parents('ul').remove();
                     // console.log($(this).parents('ul'));
                     is_delet = true;
-                    update_page_info();
                 } else {
                     alert(data.msg);
                 }
             }
         });
         if (is_delet) {
-            console.log('ok');
+            console.log('删除成功');
             $(this).parents('ul').remove();
+            update_page_info();
         }
+    });
+
+
+    //点击去结算时是否有商品
+    $('#form').submit(function () {
+        var total_price = $('#total_price').text();
+        console.log(total_price);
+       if ( total_price > 0) {
+           return true;
+       } else {
+           return false;
+       }
     });
 
 

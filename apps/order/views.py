@@ -156,17 +156,18 @@ class OrderPayView(View):
     def get(self, request):
         user = request.user
         if not user.is_authenticated:
-            return JsonResponse({'status':'0', 'msg':'用户未登录'})
+            return JsonResponse({'status': '0', 'msg': '用户未登录'})
         order_id = request.GET.get('order_id')
         try:
             order = OrderInfo.objects.get(order_id=order_id)
         except ObjectDoesNotExist as e:
-            return JsonResponse({'status':'0', 'msg':'订单不存在'})
+            return JsonResponse({'status': '0', 'msg': '订单不存在'})
         order.order_status = 2
         order.save()
-        return JsonResponse({'status':'1', 'msg':'支付成功'})
-        
-        
+        print('支付成功')
+        return JsonResponse({'status': '1', 'msg': '支付成功'})
+
+
 # order/deliver
 class OrderDeliverView(View):
     '''订单发货'''
@@ -174,16 +175,19 @@ class OrderDeliverView(View):
     def get(self, request):
         user = request.user
         if not user.is_authenticated:
-            return JsonResponse({'status':'0', 'msg':'用户未登录'})
+            return JsonResponse({'status': '0', 'msg': '用户未登录'})
         order_id = request.GET.get('order_id')
+        print(order_id)
         try:
             order = OrderInfo.objects.get(order_id=order_id)
         except ObjectDoesNotExist as e:
-            return JsonResponse({'status':'0', 'msg':'订单不存在'})
+            return JsonResponse({'status': '0', 'msg': '订单不存在'})
         order.order_status = 3
         order.save()
-        return JsonResponse({'status':'1', 'msg':'发货成功'})
-        
+        print('发货成功')
+        return JsonResponse({'status': '1', 'msg': '发货成功'})
+
+
 # order/pay
 class OrderReceiverView(View):
     '''订单收货'''
@@ -191,17 +195,18 @@ class OrderReceiverView(View):
     def get(self, request):
         user = request.user
         if not user.is_authenticated:
-            return JsonResponse({'status':'0', 'msg':'用户未登录'})
+            return JsonResponse({'status': '0', 'msg': '用户未登录'})
         order_id = request.GET.get('order_id')
         try:
             order = OrderInfo.objects.get(order_id=order_id)
         except ObjectDoesNotExist as e:
-            return JsonResponse({'status':'0', 'msg':'订单不存在'})
+            return JsonResponse({'status': '0', 'msg': '订单不存在'})
         order.order_status = 4
         order.save()
-        return JsonResponse({'status':'1', 'msg':'收货成功'})
-        
-        
+        print('收货成功')
+        return JsonResponse({'status': '1', 'msg': '收货成功'})
+
+
 # order/pay
 class OrderCommentView(View):
     '''订单评价'''
@@ -209,15 +214,21 @@ class OrderCommentView(View):
     def get(self, request):
         user = request.user
         if not user.is_authenticated:
-            return JsonResponse({'status':'0', 'msg':'用户未登录'})
+            return JsonResponse({'status': '0', 'msg': '用户未登录'})
         order_id = request.GET.get('order_id')
+        sku_id = request.GET.get('sku_id')
         comment = request.GET.get('comment')
         try:
             order = OrderInfo.objects.get(order_id=order_id)
         except ObjectDoesNotExist as e:
-            return JsonResponse({'status':'0', 'msg':'订单不存在'})
+            return JsonResponse({'status': '0', 'msg': '订单不存在'})
         order.order_status = 5
         order.save()
-        return JsonResponse({'status':'1', 'msg':'支付成功'})
-        
-        
+        try:
+            order_sku = OrderGoods.objects.get(order=order, id=sku_id)
+        except ObjectDoesNotExist as e:
+            return JsonResponse({'status': '0', 'msg': '未购买该商品'})
+        order_sku.comment = comment
+        order_sku.save()
+        print('评价成功')
+        return JsonResponse({'status': '1', 'msg': '支付成功'})

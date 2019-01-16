@@ -5,6 +5,9 @@
     {% endblock title %}
 
     {% block js %}
+    {% load staticfiles %}
+    <script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/addcart.js' %}"></script>
     {% endblock js %}
 
 
@@ -67,12 +70,10 @@
 					<div class="operate">
 						<span class="prize">￥{{ item.object.price }}</span>
 						<span class="unit">{{ item.object.price }}/{{ item.object.unite }}</span>
-						<a href="#" class="add_goods" title="加入购物车"></a>
+						<a href="#" class="add_goods search_add" title="加入购物车" sku_id="{{ item.object.id }}"></a>
 					</div>
 				</li>
                 {% endfor %}
-
-
 			</ul>
 
 			<div class="pagenation">

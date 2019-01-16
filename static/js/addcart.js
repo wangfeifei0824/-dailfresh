@@ -77,6 +77,14 @@ $(function () {
         add_cart2(sku_id, count);
     });
 
+    // 搜索页页-加入购物车
+    $('.search_add').click(function () {
+        // console.log('ok');
+        var sku_id = $(this).attr('sku_id');
+        var count = '1';
+        add_cart2(sku_id, count);
+    });
+
     // 用户中心页加入购物车
     $('.userinfo_add_cart').click(function () {
         // console.log('ok');

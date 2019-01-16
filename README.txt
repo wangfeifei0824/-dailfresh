@@ -13,6 +13,7 @@ Django web后端开发电商项目--dailfresh
     mysql(需手动创建数据库dailyfresh)
     django-haystack(pip安装)
     whoosh(pip安装)
+	jieba(pip安装)
 
 2.启动项目
     0.连接到mysql数据库
